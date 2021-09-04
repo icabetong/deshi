@@ -33,9 +33,9 @@ app.post('/notification', (request, response) => {
         token: deviceToken
     }
 
-    admin.messaging().send(message)
-        .then((response) => {
-            console.log(response)
+    return admin.messaging().send(message)
+        .then((firebaseResponse) => {
+            console.log(firebaseResponse)
             
             return response.sendStatus(200);
         }).catch((error) => {
