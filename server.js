@@ -34,10 +34,15 @@ app.post('/notification', (request, response) => {
     }
 
     admin.messaging().send(message)
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error))
+        .then((response) => {
+            console.log(response)
+            
+            return response.sendStatus(200);
+        }).catch((error) => {
+            console.log(error)
 
-    return response.sendStatus(200);
+            return response.sendStatus(500);
+        })
 })
 
 const port = 5000;
