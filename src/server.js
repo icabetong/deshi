@@ -80,23 +80,36 @@ app.post('/create-user', async (request, response) => {
     }
 });
 
-app.post('disable-user', async (request, response) => {
+app.post('modify-user', async (request, response) => {
     if (!request.body.token)
         return response.sendStatus(401);
-    else if (!request.body.userId)
+    else if (!request.body.userId || !request.body.disabled)
         return response.sendStatus(412);
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(request.body.token);
-
         console.log(decodedToken);
 
+        const userDoc = await admin.firestore().collection("users")
+            .doc(decodedToken.uid).get();
+        if (!userDoc.exists)
+            return response.sendStatus(401);
 
+        const user = userDoc.data();
+        if (utils.hasPermission(user.permissions, 16)) {
+            await admin.auth().updateUser(request.body.userId, {
+                disabled: request.body.disabled
+            })
+            await admin.firestore().collection("users")
+                .doc(request.body.userId).update({
+                    disabled: request.body.disabled
+                })
+        } else response.sendStatus(401);
     } catch (error) {
         console.log(error);
         return response.sendStatus(error);
     }
-})
+});
 
 app.post('/remove-user', async (request, response) => {
     if (!request.body.token)
