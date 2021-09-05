@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
+const utils = require('./utils');
 
 const app = express();
 
@@ -28,10 +29,55 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/notification', (request, response) => {
+app.post('/create-user', async (request, response) => {
+    
+    if (!request.body.token && !request.body.userId && !request.body.email)
+        return response.sendStatus(401);
+
     /**
      * We first need to verify the credebility of the request
-     * by authenticating the tokenf from the request body.
+     * by authenticating the token from the request body.
+     */
+
+    try {
+        let decodedToken = await admin.auth().verifyIdToken(request.body.token)
+        console.log(decodedToken);
+
+        const userDoc = await admin.firestore().collection("users")
+            .doc(decodedToken.uid).get();
+        if (!userDoc.exists)
+            return response.sendStatus(401);
+        
+        const user = userDoc.data();
+        if (utils.hasPermission(user.permissions, 16)) {
+            const newUser = {
+                userId: request.body.userId,
+                email: request.body.email,
+                firstName: request.body.firstName,
+                lastName: request.body.lastName,
+                permissions: request.body.permissions,
+                position: request.body.position,
+                department: request.body.department
+            }
+            
+            await admin.firestore().collection("users")
+                .doc(newUser.userId).set(newUser);
+            await admin.auth().createUser({
+                uid: newUser.userId,
+                email: newUser.email,
+                password: "password"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        response.sendStatus(500);
+    }
+})
+
+app.post('/send-notification', (request, response) => {
+    /**
+     * We first need to verify the credebility of the request
+     * by authenticating the token from the request body.
      */
     if (!request.body.token)
         return response.sendStatus(401);
