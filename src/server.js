@@ -173,6 +173,6 @@ app.post('/send-notification', async (request, response) => {
 })
 
 const port = 5000;
-app.listen(process.env.port || port, () => {
-    console.log(`Server is listening to port ${process.env.port || port}`)
+app.listen(process.env.PORT || port, () => {
+    console.log(`Server is listening to port ${process.env.PORT || port}`)
 })
