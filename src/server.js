@@ -36,7 +36,7 @@ app.post('/create-user', async (request, response) => {
      */
     if (!request.body.token)
         return response.sendStatus(401);
-    else if (request.body.email)
+    else if (!request.body.email)
     // If there is not an email in the post request
     // return a Precondition Failed status.
         return response.sendStatus(412);
@@ -174,5 +174,5 @@ app.post('/send-notification', async (request, response) => {
 
 const port = 5000;
 app.listen(process.env.port || port, () => {
-    console.log(`Server is listening to port ${port}`)
+    console.log(`Server is listening to port ${process.env.port || port}`)
 })
