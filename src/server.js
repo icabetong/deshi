@@ -71,7 +71,7 @@ app.post('/create-user', async (request, response) => {
             await admin.auth().createUser({
                 uid: newUser.userId,
                 email: newUser.email,
-                password: utils.randomPassword()
+                password: "password"/**utils.randomPassword()**/
             })
         }
     } catch (error) {

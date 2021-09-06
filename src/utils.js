@@ -17,7 +17,7 @@ module.exports.randomPassword = function() {
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_-+=";
     var password = '';
     for (var i = 0; i < 8; i++) {
-        password += characters.charAt(Math.floow(Math.random() * characters.length));
+        password += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return password;
 }
