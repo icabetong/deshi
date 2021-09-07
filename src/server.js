@@ -16,13 +16,15 @@ admin.initializeApp({
 })
 
 /**
- *  example type request: 
- *  const request = {
- *      token: "",
- *      notification: { title: "", body: "" },
- *      deviceToken: "",
- *      data: {}
- *  }
+ * HTTP Status Codes Reference:
+ * 
+ * 200 - OK
+ * 201 - Created
+ * 401 - Unauthorized
+ * 403 - Forbidden
+ * 412 - Precondition Failed
+ * 422 - Unprocessable Entity
+ * 500 - General Server Error
  */
 
 app.use(cors(corsOptions));
@@ -73,10 +75,36 @@ app.post('/create-user', async (request, response) => {
                 email: newUser.email,
                 password: "password"/**utils.randomPassword()**/
             })
-        }
+            return response.sendStatus(201);
+
+        } else return response.sendStatus(403);
+
     } catch (error) {
-        console.log(error);
-        response.sendStatus(500);
+        console.log(error.code);
+        switch(error.code) {
+            case 'auth/invalid-credential': 
+                return response.sendStatus(401);
+
+            case 'auth/email-already-exists':
+                return response.sendStatus(422);
+
+            case 'auth/uid-already-exists':
+                return response.sendStatus(422);
+
+            case 'auth/invalid-email':
+                return response.sendStatus(400);
+
+            case 'auth/invalid-password':
+                return response.sendStatus(400);
+
+            case 'auth/user-not-found':
+                return response.sendStatus(404);
+
+            case 'permission-denied':
+                return response.sendStatus(403);
+
+            default: return response.sendStatus(500);
+        }
     }
 });
 
@@ -93,7 +121,7 @@ app.post('modify-user', async (request, response) => {
         const userDoc = await admin.firestore().collection("users")
             .doc(decodedToken.uid).get();
         if (!userDoc.exists)
-            return response.sendStatus(401);
+            return response.sendStatus(403);
 
         const user = userDoc.data();
         if (utils.hasPermission(user.permissions, 16)) {
@@ -104,10 +132,24 @@ app.post('modify-user', async (request, response) => {
                 .doc(request.body.userId).update({
                     disabled: request.body.disabled
                 })
-        } else response.sendStatus(401);
+
+            return response.sendStatus(200);
+
+        } else return response.sendStatus(403);
     } catch (error) {
         console.log(error);
-        return response.sendStatus(error);
+        switch(error.code) {
+            case 'auth/invalid-credential': 
+                return response.sendStatus(401);
+
+            case 'auth/user-not-found':
+                return response.sendStatus(404);
+                
+            case 'permission-denied':
+                return response.sendStatus(403);
+
+            default: return response.sendStatus(500);
+        }
     }
 });
 
@@ -124,7 +166,7 @@ app.post('/remove-user', async (request, response) => {
         const userDoc = await admin.firestore().collection("users")
             .doc(decodedToken.uid).get();
         if (!userDoc.exists)
-            return response.sendStatus(401);
+            return response.sendStatus(403);
 
         const user = userDoc.data();
         if (utils.hasPermission(user.permissions, 16)) {
@@ -137,7 +179,18 @@ app.post('/remove-user', async (request, response) => {
 
     } catch (error) {
         console.log(error);
-        return response.sendStatus(500);
+        switch(error.code) {
+            case 'auth/invalid-credential': 
+                return response.sendStatus(401);
+
+            case 'auth/user-not-found':
+                return response.sendStatus(404);
+                
+            case 'permission-denied':
+                return response.sendStatus(403);
+
+            default: return response.sendStatus(500);
+        }
     }
 })
 
