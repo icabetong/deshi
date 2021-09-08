@@ -4,7 +4,7 @@ module.exports.hasPermission = function(permissions, permission) {
         permissions.includes(32);
 }
 
-module.exports.newUserId() = function() {
+module.exports.newUserId = function() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var id = '';
     for (var i = 0; i < 28; i++) {
@@ -13,7 +13,7 @@ module.exports.newUserId() = function() {
     return id;
 }
 
-module.exports.newId() = function() {
+module.exports.newId = function() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var id = '';
     for (var i = 0; i < 20; i++) {

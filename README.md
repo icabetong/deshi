@@ -2,7 +2,7 @@
 
 **Under Construction!**
 
-Deshi (Japanese: *disciple*) is a small server-side application written in JavaScript to facilitate the sending of FCM notifications instead of using Firebase's own Cloud Functions that not require users to upgrade their plans to use it.
+Deshi (Japanese: *disciple*) is a small server-side application written in JavaScript to securely facilitate the sending of FCM notifications and the user management functions of Ludendorff.
 
 ## Built with
 * NodeJS
