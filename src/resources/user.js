@@ -137,10 +137,10 @@ module.exports.delete = async (admin, request, response) => {
      */
      if (!request.body.token)
         return response.status(401).send({ reason: "empty-auth-token" })
-    else if (!request.body.email)
-    // If there is not an email in the post request
+    else if (!request.body.userId)
+    // If there is not an userId in the post request
     // return a Precondition Failed status.
-        return response.status(412).send({ reason: "empty-email" });
+        return response.status(412).send({ reason: "empty-user-id" });
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(request.body.token);
