@@ -22,7 +22,7 @@ module.exports.send = async (admin, request, response) => {
                 sender: request.body.extras.sender,
                 target: request.body.extras.target
             },
-            token: deviceToken
+            token: request.body.deviceToken
         }
 
         await admin.messaging().send(message)
