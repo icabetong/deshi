@@ -15,8 +15,12 @@ module.exports.send = async (admin, request, response) => {
 
         const message = {
             notification: {
-                title: request.body.title,
-                body: request.body.body
+                title_loc_key: request.body.title,
+                body_loc_key: request.body.body,
+            },
+            data: {
+                sender: request.body.extras.sender,
+                target: request.body.extras.target
             },
             token: deviceToken
         }
