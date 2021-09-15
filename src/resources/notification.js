@@ -14,6 +14,8 @@ module.exports.send = async (admin, request, response) => {
         const token = await admin.auth().verifyIdToken(request.body.token);
         console.log(token);
 
+        console.log(request.body.extras.sender)
+        console.log(request.body.extras.target)
         const message = {
             notification: {
                 title_loc_key: request.body.title,
