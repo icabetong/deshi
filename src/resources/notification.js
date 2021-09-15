@@ -19,7 +19,8 @@ module.exports.send = async (admin, request, response) => {
                 title: request.body.title,
                 body: request.body.body,
                 sender: request.body.extras.sender,
-                target: request.body.extras.target
+                target: request.body.extras.target,
+                payload: request.body.payload,
             },
             token: request.body.deviceToken
         }
