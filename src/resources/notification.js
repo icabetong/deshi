@@ -15,16 +15,6 @@ module.exports.send = async (admin, request, response) => {
         console.log(token);
 
         const message = {
-            // notification: {
-            //     title: request.body.title,
-            //     body: request.body.body,
-            // },
-            // android: {
-            //     notification: {
-            //         title_loc_key: request.body.title,
-            //         body_loc_key: request.body.body
-            //     }
-            // },
             data: {
                 title: request.body.title,
                 body: request.body.body,
