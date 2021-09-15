@@ -1,3 +1,4 @@
+const utils = require("../utils");
 
 module.exports.send = async (admin, request, response) => {
     /**
@@ -25,7 +26,24 @@ module.exports.send = async (admin, request, response) => {
             token: request.body.deviceToken
         }
 
-        await admin.messaging().send(message)
+        await admin.messaging().send(message);
+
+        const id = utils.newId();
+        await admin.firestore().collection("notifications")
+            .doc(id)
+            .set({
+                notificationId: id,
+                title: request.body.title,
+                body: request.body.body,
+                payload: request.body.payload,
+                senderId: request.body.senderId,
+                receiverId: request.body.receiverId,
+                extras: {
+                    sender: request.extras.sender,
+                    target: request.extras.target
+                }
+            })
+
         return response.sendStatus(200);
 
     } catch (error) {
