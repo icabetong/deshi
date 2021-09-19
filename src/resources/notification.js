@@ -1,3 +1,4 @@
+const { firestore } = require("firebase-admin");
 const utils = require("../utils");
 
 module.exports.send = async (admin, request, response) => {
@@ -24,6 +25,7 @@ module.exports.send = async (admin, request, response) => {
             },
             token: request.body.deviceToken
         }
+        console.log(message.data.payload);
 
         await admin.messaging().send(message);
 
@@ -37,6 +39,7 @@ module.exports.send = async (admin, request, response) => {
                 payload: request.body.payload,
                 senderId: request.body.senderId,
                 receiverId: request.body.receiverId,
+                timestamp: firestore.Timestamp.now(),
                 extras: {
                     sender: request.body.extras.sender,
                     target: request.body.extras.target
