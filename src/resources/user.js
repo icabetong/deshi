@@ -1,4 +1,5 @@
-
+require('dotenv').config();
+const nodemailer = require('nodemailer');
 const utils = require('../utils');
 
 module.exports.create = async (admin, request, response) => {
@@ -38,14 +39,35 @@ module.exports.create = async (admin, request, response) => {
                 department: request.body.department
             }
             
+            const password = utils.randomPassword();
             await admin.firestore().collection("users")
                 .doc(newUser.userId).set(newUser);
             await admin.auth().createUser({
                 uid: newUser.userId,
                 email: newUser.email,
-                password: "password"/**utils.randomPassword()**/
+                password: password
                 })
-            return response.sendStatus(201);
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.MAIL_EMAIL_SOURCE,
+                    pass: process.env.MAIL_EMAIL_PASSWORD
+                }
+            })
+
+            const mail = {
+                from: process.env.MAIL_EMAIL_SOURCE,
+                to: newUser.email,
+                subject: "Your New Ludendorff Account",
+                html: `Use this password for your account: <strong>${password}</strong>`
+            }
+
+            transporter.sendMail(mail, (error, info) => {
+                if (error)
+                    return response.sendStatus(500)
+                else return response.sendStatus(201);
+            })
 
         } else return response.status(403).send({ reason: "not-enough-permissions" });
 
