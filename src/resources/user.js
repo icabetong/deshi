@@ -176,3 +176,83 @@ module.exports.delete = async (admin, request, response) => {
         }
     }
 }
+
+module.exports.update = async (admin, request, response) => {
+    const firestore = admin.firestore();
+    /**
+     * We first need to verify the credebility of the request
+     * by authenticating the token from the request body.
+     */
+    if (!request.body.token)
+        return response.status(401).send({ reason: "empty-auth-token" });
+    else if (!request.body.user) 
+        return response.status(412).send({ reason: "empty-user" });
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(request.body.token);
+        console.log(decodedToken);
+
+        const batch = firestore.batch();
+        const user = request.body.user;
+
+        batch.update(firestore.collection("users")
+            .doc(user.userId), user);
+
+        if (user.department) {
+            const departments = await firestore.collection("departments")
+                .where("manager.userId", "==", user.userId)
+                .get();
+
+            departments.docs.forEach((doc) => {
+                if (doc.data().departmentId !== user.department.departmentId) {
+                    batch.update(doc.ref, "manager", undefined);
+                }
+            });
+        }
+
+        const minimizedUser = {
+            userId: user.userId,
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+            imageUrl: user.imageUrl,
+            position: user.position,
+            deviceToken: user.deviceToken 
+        }
+
+        const assignment = await firestore.collection("assignments")
+            .where("user.userId", "==", user.userId)
+            .get();
+        assignment.docs.forEach((doc) => {
+            batch.update(doc.ref, "user", minimizedUser);
+        })
+
+        const petitionedRequests = await firestore.collection("requests")
+            .where("petitioner.userId", "==", user.userId)
+            .get();
+        petitionedRequests.docs.forEach((doc) => {
+            batch.update(doc.ref, "petitioner", minimizedUser);
+        })
+        
+        const endorsedRequests = await firestore.collection("requests")
+            .where("endorser.userId", "==", user.userId)
+            .get()
+        endorsedRequests.docs.forEach((doc) => {
+            batch.update(doc.ref, "endorser", minimizedUser);
+        })
+
+        await batch.commit();
+
+    } catch (error) {
+        console.log(error);
+
+        switch(error.code) {
+            case 'auth/invalid-credential': 
+                return response.status(401).send({ reason: "invalid-credentials" });
+
+            case 'permission-denied':
+                return response.status(403).send({ reason: "not-enough-permissions" });
+
+            default: return response.status(500).send({ reason: "general-error" });
+        }
+    }
+}
