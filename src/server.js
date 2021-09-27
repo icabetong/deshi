@@ -1,11 +1,14 @@
 require('dotenv').config();
-const nodemailer = require('nodemailer');
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 
-const user = require('./resources/user');
+const asset = require('./resources/asset');
+const assignment = require('./resources/assignment');
+const category = require('./resources/category');
+const department = require('./resources/department');
 const notification = require('./resources/notification');
+const user = require('./resources/user');
 
 const app = express();
 
@@ -34,21 +37,41 @@ app.use(express.urlencoded({ extended: true }));
  * 500 - General Server Error
  */
 
+// Asset Requests
+app.patch('/update-asset', async (request, response) => {
+    return asset.update(admin, request, response);
+});
+
+// Assignment Requests
+app.patch('/update-assignment', async (request, response) => {
+    return assignment.update(admin, request, response);
+});
+
+// Category Requests
+app.patch('/update-category', async (request, response) => {
+    return category.update(admin, request, response);
+});
+
+// Department Requests
+app.patch('/update-department', async (request, response) => {
+    return department.update(admin, request, response);
+});
+
+// User Requests
 app.post('/create-user', async (request, response) => {
     return user.create(admin, request, response);
 });
-
 app.patch('modify-user', async (request, response) => {
     return user.modify(admin, request, response);
 });
-
 app.delete('/remove-user', async (request, response) => {
     return user.delete(admin, request, response);
-})
+});
 
+// Notification Requests
 app.post('/send-notification', async (request, response) => {
     return notification.send(admin, request, response);
-})
+});
 
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
