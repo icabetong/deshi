@@ -50,7 +50,7 @@ module.exports.update = async(admin, request, response) => {
         })
 
         await batch.commit();
-        response.sendStatus(200);
+        return response.sendStatus(200);
 
     } catch (error) {
         console.log(error);
