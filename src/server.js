@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
+const algoliasearch = require('algoliasearch');
 
+const search = require('./search');
 const asset = require('./resources/asset');
 const assignment = require('./resources/assignment');
 const category = require('./resources/category');
@@ -11,6 +13,9 @@ const notification = require('./resources/notification');
 const user = require('./resources/user');
 
 const app = express();
+const algolia = algoliasearch(
+    process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_KEY
+);
 
 admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.FIREBASE_TOKEN, 'base64').toString()))
@@ -24,6 +29,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+search.init(admin.firestore(), algolia);
+
 
 /**
  * HTTP Status Codes Reference:

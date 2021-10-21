@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "algoliasearch": "^4.10.5",
     "cors": "^2.8.5",
     "dot-env": "0.0.1",
     "dotenv": "^10.0.0",
