@@ -49,6 +49,12 @@ module.exports.send = async (admin, request, response) => {
 
     } catch (error) {
         console.log(error);
-        return response.sendStatus(500);
+
+        switch(error.code) {
+            case 'messaging/registration-token-not-registered':
+                return response.status(200).send({ reason: "messaging/registration-token-not-registered" })
+            default:
+                return response.sendStatus(500);
+        }
     }
 }

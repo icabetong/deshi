@@ -81,6 +81,14 @@ app.post('/send-notification', async (request, response) => {
     return notification.send(admin, request, response);
 });
 
+// Search
+app.get('/search-assets', async ({ body }, response) => {
+    const { requests } = body;
+
+    const results = await algolia.search(requests)
+    return response.status(200).send(results)
+});
+
 const port = 5000;
 app.listen(process.env.PORT || port, () => {
     console.log(`Server is listening to port ${process.env.PORT || port}`)
