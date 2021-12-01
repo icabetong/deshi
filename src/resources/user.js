@@ -40,13 +40,13 @@ module.exports.create = async (admin, request, response) => {
             }
             
             const password = utils.randomPassword();
-            await admin.firestore().collection("users")
-                .doc(newUser.userId).set(newUser);
             await admin.auth().createUser({
                 uid: newUser.userId,
                 email: newUser.email,
                 password: password
-                })
+            });
+            await admin.firestore().collection("users")
+                .doc(newUser.userId).set(newUser);
 
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -72,27 +72,29 @@ module.exports.create = async (admin, request, response) => {
         console.log(error.code);
         switch(error.code) {
             case 'auth/invalid-credential': 
-            return response.status(401).send({ reason: "invalid-credentials" });
+                return response.status(401).send({ reason: "invalid-credentials" });
 
+            case 'auth/email-already-in-use':
             case 'auth/email-already-exists':
-            return response.status(422).send({ reason: "email-already-exists" });
+                return response.status(422).send({ reason: "email-already-exists" });
 
             case 'auth/uid-already-exists':
-            return response.status(422).send({ reason: "uid-already-exists" });
+                return response.status(422).send({ reason: "uid-already-exists" });
 
             case 'auth/invalid-email':
-            return response.status(400).send({ reason: "invalid-email" });
+                return response.status(400).send({ reason: "invalid-email" });
 
             case 'auth/invalid-password':
-            return response.status(400).send({ reason: "invalid-password" });
+                return response.status(400).send({ reason: "invalid-password" });
 
             case 'auth/user-not-found':
-            return response.status(404).send({ reason: "user-not-found" });
+                return response.status(404).send({ reason: "user-not-found" });
 
             case 'permission-denied':
-            return response.status(403).send({ reason: "not-enough-permissions" });
+                return response.status(403).send({ reason: "not-enough-permissions" });
 
-            default: return response.status(500).send({ reason: "general-error" });
+            default: 
+                return response.status(500).send({ reason: "general-error" });
         }
     }
 }
