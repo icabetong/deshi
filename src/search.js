@@ -37,7 +37,7 @@ const fetchAssets = async(firestore, index) => {
 }
 const fetchAssignments = async(firestore, index) => {
     try {
-        const assignments = await firestore.collection("assignmens").get();
+        const assignments = await firestore.collection("assignments").get();
 
         const transformed = [];
         assignments.docs.forEach((doc) => {
