@@ -63,7 +63,8 @@ module.exports.create = async (admin, request, response) => {
                 html: `Use this password for your account: <strong>${password}</strong>`
             }
 
-            await transporter.sendMail(mail);
+            let result = await transporter.sendMail(mail);
+            console.log(result.rejected);
             console.log("Email sent: " + mail.to);
 
         } else return response.status(403).send({ reason: "not-enough-permissions" });
