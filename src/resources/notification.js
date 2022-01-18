@@ -9,7 +9,7 @@ module.exports.send = async (admin, request, response) => {
     if (!request.body.token)
         return response.sendStatus(401);
     else if (!request.body.deviceToken)
-        return response.sendStatus(412);
+        return response.sendStatus(200);
 
     try {
         const token = await admin.auth().verifyIdToken(request.body.token);
