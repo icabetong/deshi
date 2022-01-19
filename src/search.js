@@ -1,6 +1,6 @@
 module.exports.init = async(firestore, algolia) => {
     const assets = algolia.initIndex("assets");
-    const assignments = algolia.initIndex("assignment");
+    const assignments = algolia.initIndex("assignments");
     const categories = algolia.initIndex("categories");
     const departments = algolia.initIndex("departments");
     const requests = algolia.initIndex("requests");
