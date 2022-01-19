@@ -1,24 +1,24 @@
-module.exports.init = async (firestore, algolia) => {
-  const assets = algolia.initIndex("assets");
-  const assignments = algolia.initIndex("assignment");
-  const categories = algolia.initIndex("categories");
-  const departments = algolia.initIndex("departments");
-  const requests = algolia.initIndex("requests");
-  const users = algolia.initIndex("users");
+module.exports.init = async(firestore, algolia) => {
+    const assets = algolia.initIndex("assets");
+    const assignments = algolia.initIndex("assignments");
+    const categories = algolia.initIndex("categories");
+    const departments = algolia.initIndex("departments");
+    const requests = algolia.initIndex("requests");
+    const users = algolia.initIndex("users");
 
-  await fetchAssets(firestore, assets);
-  await fetchAssignments(firestore, assignments);
-  await fetchCategories(firestore, categories);
-  await fetchDepartments(firestore, departments);
-  await fetchRequests(firestore, requests);
-  await fetchUsers(firestore, users);
+    await fetchAssets(firestore, assets);
+    await fetchAssignments(firestore, assignments);
+    await fetchCategories(firestore, categories);
+    await fetchDepartments(firestore, departments);
+    await fetchRequests(firestore, requests);
+    await fetchUsers(firestore, users);
 
-  listenToAssets(firestore, assets);
-  listenToAssignments(firestore, assignments);
-  listenToCategories(firestore, categories);
-  listenToDepartments(firestore, departments);
-  listenToRequests(firestore, requests);
-  listenToUsers(firestore, users);
+    listenToAssets(firestore, assets);
+    listenToAssignments(firestore, assignments);
+    listenToCategories(firestore, categories);
+    listenToDepartments(firestore, departments);
+    listenToRequests(firestore, requests);
+    listenToUsers(firestore, users);
 }
 
 const fetchAssets = async (firestore, index) => {
