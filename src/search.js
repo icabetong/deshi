@@ -42,11 +42,12 @@ const fetchAssignments = async (firestore, index) => {
     const transformed = [];
     assignments.docs.forEach((doc) => {
       const data = doc.data();
-      const assignment = { ...data };
-      const { dateAssigned, dateReturned } = assignment;
+      const { dateAssigned, dateReturned } = data;
+      let assignment = { ...data };
       if (dateAssigned && dateAssigned.hasOwnProperty('_seconds')
         && dateAssigned.hasOwnProperty('_nanoseconds')) {
         assignment = {
+          ...assignment,
           dateAssigned: {
             seconds: data.dateAssigned._seconds,
             nanoseconds: data.dateAssigned._nanoseconds
