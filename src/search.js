@@ -113,13 +113,21 @@ const listenToAssets = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.assetId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.assetId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.assetId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.assetId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.assetId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.assetId, error);
+          });
     })
   })
 }
@@ -130,13 +138,21 @@ const listenToAssignments = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.assignmentId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.assignmentId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.assignmentId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.assignmentId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected)
+          .then(function() {
+            onSuccess(change.type, data.assignmentId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.assignmentId, error);
+          })
     })
   })
 }
@@ -147,13 +163,21 @@ const listenToCategories = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.categoryId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.categoryId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.categoryId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.categoryId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected)
+          .then(function() {
+            onSuccess(change.type, data.categoryId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.categoryId, error);
+          });
     })
   })
 }
@@ -164,13 +188,21 @@ const listenToDepartments = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.departmentId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.departmentId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.departmentId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.departmentId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected)
+          .then(function() {
+            onSuccess(change.type, data.departmentId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.departmentId, error);
+          });
     })
   })
 }
@@ -181,13 +213,21 @@ const listenToRequests = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.requestId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.requestId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.requestId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.requestId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected)
+          .then(function() {
+            onSuccess(change.type, data.requestId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.requestId, error)
+          })
     })
   })
 }
@@ -198,16 +238,24 @@ const listenToUsers = (firestore, index) => {
 
       if (change.type === 'added' || change.type === 'modified')
         index.saveObject({ ...data, objectID: data.userId })
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected);
+          .then(function() {
+            onSuccess(change.type, data.userId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.userId, error);
+          });
 
       if (change.type === 'removed')
         index.deleteObject(data.userId)
-          .then(onPromiseHandled)
-          .catch(onPromiseRejected)
+          .then(function() {
+            onSuccess(change.type, data.userId);
+          })
+          .catch(function(error) {
+            onError(change.type, data.userId, error);
+          })
     })
   })
 }
 
-function onPromiseHandled() { console.log("Operation Successfull"); }
-function onPromiseRejected(error) { console.log(error); }
+function onSuccess(action, id) { console.log(`${action}: ${id}`); }
+function onError(action, id, error) { console.log(`${action}: ${id} - ${error}`); }
