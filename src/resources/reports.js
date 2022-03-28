@@ -10,7 +10,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     const decodedToken = await admin.auth().verifyIdToken(request.body.token);
     console.log(decodedToken);
 
-    await index.partialUpdateObjects({
+    await index.partialUpdateObject({
       objectID: request.body.id,
       items: request.body.items,
     });
