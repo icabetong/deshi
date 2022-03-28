@@ -1,7 +1,7 @@
 module.exports.updateInventoryItems = async (admin, index, request, response) => {
   if (!request.body.token)
     return response.status(401).send({ reason: "empty-auth-token" });
-  else if (!response.body.objectId)
+  else if (!response.body.id)
     return response.status(412).send({ reason: 'empty-no-objectid' })
   else if (!request.body.items)
     return response.status(412).send({ reason: "empty-items" })
@@ -11,7 +11,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     console.log(decodedToken);
 
     await index.partialUpdateObjects({
-      objectID: request.body.objectId,
+      objectID: request.body.id,
       items: request.body.items,
     });
     return response.sendStatus(200);
