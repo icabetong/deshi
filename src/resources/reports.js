@@ -11,7 +11,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     console.log(decodedToken);
 
     await index.partialUpdateObjects({
-      objectId: request.body.objectId,
+      objectID: request.body.objectId,
       items: request.body.items,
     });
     return response.sendStatus(200);
