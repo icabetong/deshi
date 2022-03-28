@@ -1,23 +1,23 @@
 module.exports.init = async(firestore, algolia) => {
     const assets = algolia.initIndex("assets");
-    const assignments = algolia.initIndex("assignments");
-    const categories = algolia.initIndex("categories");
+    const inventories = algolia.initIndex("inventories");
+    const issued = algolia.initIndex("issued");
+    const types = algolia.initIndex("types");
     const departments = algolia.initIndex("departments");
-    const requests = algolia.initIndex("requests");
     const users = algolia.initIndex("users");
 
     await fetchAssets(firestore, assets);
-    await fetchAssignments(firestore, assignments);
-    await fetchCategories(firestore, categories);
+    await fetchInventories(firestore, inventories);
+    await fetchIssued(firestore, issued);
+    await fetchTypes(firestore, types);
     await fetchDepartments(firestore, departments);
-    await fetchRequests(firestore, requests);
     await fetchUsers(firestore, users);
 
     listenToAssets(firestore, assets);
-    listenToAssignments(firestore, assignments);
-    listenToCategories(firestore, categories);
+    listenToInventories(firestore, inventories);
+    listenToIssued(firestore, issued);
+    listenToTypes(firestore, types);
     listenToDepartments(firestore, departments);
-    listenToRequests(firestore, requests);
     listenToUsers(firestore, users);
 }
 
@@ -35,22 +35,37 @@ const fetchAssets = async (firestore, index) => {
     await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
-const fetchAssignments = async (firestore, index) => {
+const fetchInventories = async (firestore, index) => {
   try {
-    const assignments = await firestore.collection("assignments").get();
+    const inventories = await firestore.collection("inventories").get();
 
     const transformed = [];
-    assignments.docs.forEach((doc) => {
+    inventories.docs.forEach((doc) => {
       const data = doc.data();
-      let assignment = { ...data };
+      let inventory = { ...data };
 
-      transformed.push({ ...assignment, objectID: data.assignmentId })
+      transformed.push({ ...inventory, objectID: data.inventoryReportId })
     })
 
     await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
-const fetchCategories = async (firestore, index) => {
+const fetchIssued = async (firestore, index) => {
+  try {
+    const issued = await firestore.collection("issued").get();
+
+    const transformed = [];
+    issued.docs.forEach((doc) => {
+      const data = doc.data();
+      let issued = { ...data };
+
+      transformed.push({ ...issued, objectID: data.issedReportId })
+    })
+
+    await index.saveObjects(transformed);
+  } catch (error) { console.log(error); }
+}
+const fetchTypes = async (firestore, index) => {
   try {
     const categories = await firestore.collection("categories").get();
 
@@ -78,20 +93,7 @@ const fetchDepartments = async (firestore, index) => {
     await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
-const fetchRequests = async (firestore, index) => {
-  try {
-    const requests = await firestore.collection("requests").get();
 
-    const transformed = [];
-    requests.docs.forEach((doc) => {
-      const data = doc.data();
-
-      transformed.push({ ...data, objectID: data.requestId })
-    })
-
-    await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
-}
 const fetchUsers = async (firestore, index) => {
   try {
     const users = await firestore.collection("users").get();
@@ -103,6 +105,7 @@ const fetchUsers = async (firestore, index) => {
       transformed.push({ ...data, objectID: data.userId })
     })
 
+    await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
 
@@ -131,32 +134,57 @@ const listenToAssets = (firestore, index) => {
     })
   })
 }
-const listenToAssignments = (firestore, index) => {
-  firestore.collection("assignments").onSnapshot((snapshot) => {
+const listenToInventories = (firestore, index) => {
+  firestore.collection("inventories").onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       const data = change.doc.data();
 
       if (change.type === 'added' || change.type === 'modified')
-        index.saveObject({ ...data, objectID: data.assignmentId })
+        index.saveObject({ ...data, objectID: data.inventoryReportId })
           .then(function() {
-            onSuccess('assignments', change.type, data.assignmentId);
+            onSuccess('inventories', change.type, data.inventoryReportId);
           })
           .catch(function(error) {
-            onError('assignments', change.type, data.assignmentId, error);
+            onError('inventories', change.type, data.inventoryReportId, error);
           });
 
       if (change.type === 'removed')
-        index.deleteObject(data.assignmentId)
+        index.deleteObject(data.inventoryReportId)
           .then(function() {
-            onSuccess('assignments', change.type, data.assignmentId);
+            onSuccess('inventories', change.type, data.inventoryReportId);
           })
           .catch(function(error) {
-            onError('assignments', change.type, data.assignmentId, error);
+            onError('inventories', change.type, data.inventoryReportId, error);
           })
     })
   })
 }
-const listenToCategories = (firestore, index) => {
+const listenToIssued = (firestore, index) => {
+  firestore.collection("issued").onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      const data = change.doc.data();
+
+      if (change.type === 'added' || change.type === 'modified')
+        index.saveObject({ ...data, objectID: data.issuedReportId })
+          .then(function() {
+            onSuccess('issued', change.type, data.issuedReportId);
+          })
+          .catch(function(error) {
+            onError('issued', change.type, data.issuedReportId, error);
+          });
+
+      if (change.type === 'removed')
+        index.deleteObject(data.issuedReportId)
+          .then(function() {
+            onSuccess('issued', change.type, data.issuedReportId);
+          })
+          .catch(function(error) {
+            onError('issued', change.type, data.issuedReportId, error);
+          })
+    })
+  })
+}
+const listenToTypes = (firestore, index) => {
   firestore.collection("categories").onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       const data = change.doc.data();
@@ -203,31 +231,6 @@ const listenToDepartments = (firestore, index) => {
           .catch(function(error) {
             onError('department', change.type, data.departmentId, error);
           });
-    })
-  })
-}
-const listenToRequests = (firestore, index) => {
-  firestore.collection("requests").onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const data = change.doc.data();
-
-      if (change.type === 'added' || change.type === 'modified')
-        index.saveObject({ ...data, objectID: data.requestId })
-          .then(function() {
-            onSuccess('requests', change.type, data.requestId);
-          })
-          .catch(function(error) {
-            onError('requests', change.type, data.requestId, error);
-          });
-
-      if (change.type === 'removed')
-        index.deleteObject(data.requestId)
-          .then(function() {
-            onSuccess('requests', change.type, data.requestId);
-          })
-          .catch(function(error) {
-            onError('requests', change.type, data.requestId, error)
-          })
     })
   })
 }

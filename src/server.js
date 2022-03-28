@@ -10,6 +10,7 @@ const assignment = require('./resources/assignment');
 const category = require('./resources/category');
 const department = require('./resources/department');
 const notification = require('./resources/notification');
+const reports = require('./resources/reports');
 const user = require('./resources/user');
 
 const app = express();
@@ -44,6 +45,10 @@ search.init(admin.firestore(), algolia);
  * 422 - Unprocessable Entity
  * 500 - General Server Error
  */
+app.post('/inventory-items', async (request, response) => {
+  const index = algolia.initIndex("inventories");
+  reports.updateInventoryItems(admin, index, request, response);
+});
 
 // Asset Requests
 app.patch('/update-asset', async (request, response) => {
