@@ -115,21 +115,21 @@ const listenToAssets = (firestore, index) => {
       const data = change.doc.data();
 
       if (change.type === 'added' || change.type === 'modified')
-        index.saveObject({ ...data, objectID: data.assetId })
+        index.saveObject({ ...data, objectID: data.stockNumber })
           .then(function() {
-            onSuccess('assets', change.type, data.assetId);
+            onSuccess('assets', change.type, data.stockNumber);
           })
           .catch(function(error) {
-            onError('assets', change.type, data.assetId, error);
+            onError('assets', change.type, data.stockNumber, error);
           });
 
       if (change.type === 'removed')
-        index.deleteObject(data.assetId)
+        index.deleteObject(data.stockNumber)
           .then(function() {
-            onSuccess('assets', change.type, data.assetId);
+            onSuccess('assets', change.type, data.stockNumber);
           })
           .catch(function(error) {
-            onError('assets', change.type, data.assetId, error);
+            onError('assets', change.type, data.stockNumber, error);
           });
     })
   })
