@@ -1,7 +1,4 @@
-
-module.exports.updateInventoryItems;
-
-const updateInventoryItems = async (admin, index, request, response) => {
+module.exports.updateInventoryItems = async (admin, index, request, response) => {
   if (!request.body.token)
     return response.status(401).send({ reason: "empty-auth-token" });
   else if (!response.body.objectId)
