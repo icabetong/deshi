@@ -29,7 +29,7 @@ const fetchAssets = async (firestore, index) => {
     assets.docs.forEach((doc) => {
       const data = doc.data();
 
-      transformed.push({ ...data, objectID: data.assetId })
+      transformed.push({ ...data, objectID: data.stockNumber })
     })
 
     await index.saveObjects(transformed);
