@@ -45,7 +45,7 @@ search.init(admin.firestore(), algolia);
  * 422 - Unprocessable Entity
  * 500 - General Server Error
  */
-app.post('/inventory-items', async (request, response) => {
+app.patch('/inventory-items', async (request, response) => {
   const index = algolia.initIndex("inventories");
   reports.updateInventoryItems(admin, index, request, response);
 });
