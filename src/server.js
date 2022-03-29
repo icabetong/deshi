@@ -49,6 +49,14 @@ app.patch('/inventory-items', async (request, response) => {
   const index = algolia.initIndex("inventories");
   reports.updateInventoryItems(admin, index, request, response);
 });
+app.patch('/issued-items', async (request, response) => {
+  const index = algolia.initIndex("issues");
+  reports.updateIssuedItems(admin, index, request, response);
+})
+app.patch('/stock-card-entries', async (request, response) => {
+  const index = algolia.initIndex("cards")
+  reports.updateStockCardEntries(admin, index, request, response)
+})
 
 // Asset Requests
 app.patch('/update-asset', async (request, response) => {

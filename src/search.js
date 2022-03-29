@@ -2,6 +2,7 @@ module.exports.init = async(firestore, algolia) => {
     const assets = algolia.initIndex("assets");
     const inventories = algolia.initIndex("inventories");
     const issued = algolia.initIndex("issued");
+    const cards = algolia.initIndex("cards");
     const types = algolia.initIndex("types");
     const departments = algolia.initIndex("departments");
     const users = algolia.initIndex("users");
@@ -9,6 +10,7 @@ module.exports.init = async(firestore, algolia) => {
     await fetchAssets(firestore, assets);
     await fetchInventories(firestore, inventories);
     await fetchIssued(firestore, issued);
+    await fetchCards(firestore, cards);
     await fetchTypes(firestore, types);
     await fetchDepartments(firestore, departments);
     await fetchUsers(firestore, users);
@@ -16,6 +18,7 @@ module.exports.init = async(firestore, algolia) => {
     listenToAssets(firestore, assets);
     listenToInventories(firestore, inventories);
     listenToIssued(firestore, issued);
+    listenToCards(firestore, cards);
     listenToTypes(firestore, types);
     listenToDepartments(firestore, departments);
     listenToUsers(firestore, users);
@@ -52,7 +55,22 @@ const fetchInventories = async (firestore, index) => {
 }
 const fetchIssued = async (firestore, index) => {
   try {
-    const issued = await firestore.collection("issued").get();
+    const cards = await firestore.collection("cards").get();
+
+    const transformed = [];
+    cards.docs.forEach((doc) => {
+      const data = doc.data();
+      let card = { ...data };
+
+      transformed.push({ ...card, objectID: data.issedReportId })
+    })
+
+    await index.saveObjects(transformed);
+  } catch (error) { console.log(error); }
+}
+const fetchCards = async (firestore, index) => {
+  try {
+    const issued = await firestore.collection("cards").get();
 
     const transformed = [];
     issued.docs.forEach((doc) => {
@@ -180,6 +198,31 @@ const listenToIssued = (firestore, index) => {
           })
           .catch(function(error) {
             onError('issued', change.type, data.issuedReportId, error);
+          })
+    })
+  })
+}
+const listenToCards = (firestore, index) => {
+  firestore.collection("cards").onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      const data = change.doc.data();
+
+      if (change.type === 'added' || change.type === 'modified')
+        index.saveObject({ ...data, objectID: data.stockCardId })
+          .then(function() {
+            onSuccess('cards', change.type, data.stockCardId);
+          })
+          .catch(function(error) {
+            onError('cards', change.type, data.stockCardId, error);
+          });
+
+      if (change.type === 'removed')
+        index.deleteObject(data.stockCardId)
+          .then(function() {
+            onSuccess('cards', change.type, data.stockCardId);
+          })
+          .catch(function(error) {
+            onError('cards', change.type, data.stockCardId, error);
           })
     })
   })
