@@ -60,9 +60,9 @@ const fetchIssued = async (firestore, index) => {
     const transformed = [];
     cards.docs.forEach((doc) => {
       const data = doc.data();
-      let card = { ...data };
+      let issue = { ...data };
 
-      transformed.push({ ...card, objectID: data.issuedReportId })
+      transformed.push({ ...issue, objectID: data.issuedReportId })
     })
 
     await index.saveObjects(transformed);
@@ -75,9 +75,9 @@ const fetchCards = async (firestore, index) => {
     const transformed = [];
     issued.docs.forEach((doc) => {
       const data = doc.data();
-      let issued = { ...data };
+      let card = { ...data };
 
-      transformed.push({ ...issued, objectID: data.stockCardId })
+      transformed.push({ ...card, objectID: data.stockCardId })
     })
 
     await index.saveObjects(transformed);
