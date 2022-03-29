@@ -62,7 +62,7 @@ const fetchIssued = async (firestore, index) => {
       const data = doc.data();
       let card = { ...data };
 
-      transformed.push({ ...card, objectID: data.issedReportId })
+      transformed.push({ ...card, objectID: data.issuedReportId })
     })
 
     await index.saveObjects(transformed);
@@ -77,7 +77,7 @@ const fetchCards = async (firestore, index) => {
       const data = doc.data();
       let issued = { ...data };
 
-      transformed.push({ ...issued, objectID: data.issedReportId })
+      transformed.push({ ...issued, objectID: data.stockCardId })
     })
 
     await index.saveObjects(transformed);
