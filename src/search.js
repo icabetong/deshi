@@ -3,24 +3,21 @@ module.exports.init = async(firestore, algolia) => {
     const inventories = algolia.initIndex("inventories");
     const issued = algolia.initIndex("issued");
     const cards = algolia.initIndex("cards");
-    const types = algolia.initIndex("types");
-    const departments = algolia.initIndex("departments");
+    const categories = algolia.initIndex("categories");
     const users = algolia.initIndex("users");
 
     await fetchAssets(firestore, assets);
     await fetchInventories(firestore, inventories);
     await fetchIssued(firestore, issued);
     await fetchCards(firestore, cards);
-    await fetchTypes(firestore, types);
-    await fetchDepartments(firestore, departments);
+    await fetchCategories(firestore, categories);
     await fetchUsers(firestore, users);
 
     listenToAssets(firestore, assets);
     listenToInventories(firestore, inventories);
     listenToIssued(firestore, issued);
     listenToCards(firestore, cards);
-    listenToTypes(firestore, types);
-    listenToDepartments(firestore, departments);
+    listenToCategories(firestore, categories);
     listenToUsers(firestore, users);
 }
 
@@ -83,7 +80,7 @@ const fetchCards = async (firestore, index) => {
     await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
-const fetchTypes = async (firestore, index) => {
+const fetchCategories = async (firestore, index) => {
   try {
     const categories = await firestore.collection("categories").get();
 
@@ -227,7 +224,7 @@ const listenToCards = (firestore, index) => {
     })
   })
 }
-const listenToTypes = (firestore, index) => {
+const listenToCategories = (firestore, index) => {
   firestore.collection("categories").onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
       const data = change.doc.data();
