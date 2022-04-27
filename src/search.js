@@ -55,7 +55,7 @@ const fetchInventories = async (firestore, index) => {
 }
 const fetchIssued = async (firestore, index) => {
   try {
-    const cards = await firestore.collection("cards").get();
+    const cards = await firestore.collection("issued").get();
 
     const transformed = [];
     cards.docs.forEach((doc) => {
