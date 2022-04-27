@@ -8,9 +8,7 @@ const search = require('./search');
 const asset = require('./resources/asset');
 const assignment = require('./resources/assignment');
 const category = require('./resources/category');
-const department = require('./resources/department');
 const notification = require('./resources/notification');
-const reports = require('./resources/reports');
 const user = require('./resources/user');
 
 const app = express();
@@ -71,11 +69,6 @@ app.patch('/update-assignment', async (request, response) => {
 // Category Requests
 app.patch('/update-category', async (request, response) => {
   return category.update(admin, request, response);
-});
-
-// Department Requests
-app.patch('/update-department', async (request, response) => {
-  return department.update(admin, request, response);
 });
 
 // User Requests
