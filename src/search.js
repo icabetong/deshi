@@ -94,20 +94,6 @@ const fetchCategories = async (firestore, index) => {
     await index.saveObjects(transformed);
   } catch (error) { console.log(error); }
 }
-const fetchDepartments = async (firestore, index) => {
-  try {
-    const departments = await firestore.collection("departments").get();
-
-    const transformed = [];
-    departments.docs.forEach((doc) => {
-      const data = doc.data();
-
-      transformed.push({ ...data, objectID: data.departmentId })
-    })
-
-    await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
-}
 
 const fetchUsers = async (firestore, index) => {
   try {
@@ -245,31 +231,6 @@ const listenToCategories = (firestore, index) => {
           })
           .catch(function(error) {
             onError('categories', change.type, data.categoryId, error);
-          });
-    })
-  })
-}
-const listenToDepartments = (firestore, index) => {
-  firestore.collection("departments").onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const data = change.doc.data();
-
-      if (change.type === 'added' || change.type === 'modified')
-        index.saveObject({ ...data, objectID: data.departmentId })
-          .then(function() {
-            onSuccess('department', change.type, data.departmentId);
-          })
-          .catch(function(error) {
-            onError('department', change.type, data.departmentId, error);
-          });
-
-      if (change.type === 'removed')
-        index.deleteObject(data.departmentId)
-          .then(function() {
-            onSuccess('department', change.type, data.departmentId);
-          })
-          .catch(function(error) {
-            onError('department', change.type, data.departmentId, error);
           });
     })
   })
