@@ -82,11 +82,6 @@ app.delete('/remove-user', async (request, response) => {
   return user.delete(admin, request, response);
 });
 
-// Notification Requests
-app.post('/send-notification', async (request, response) => {
-  return notification.send(admin, request, response);
-});
-
 // Search
 app.get('/search-assets', async ({ body }, response) => {
   const { requests } = body;
