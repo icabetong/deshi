@@ -60,12 +60,6 @@ app.patch('/stock-card-entries', async (request, response) => {
 app.patch('/update-asset', async (request, response) => {
   return asset.update(admin, request, response);
 });
-
-// Assignment Requests
-app.patch('/update-assignment', async (request, response) => {
-  return assignment.update(admin, request, response);
-});
-
 // Category Requests
 app.patch('/update-category', async (request, response) => {
   return category.update(admin, request, response);
