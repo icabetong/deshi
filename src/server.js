@@ -6,9 +6,7 @@ const algoliasearch = require('algoliasearch');
 
 const search = require('./search');
 const asset = require('./resources/asset');
-const assignment = require('./resources/assignment');
 const category = require('./resources/category');
-const notification = require('./resources/notification');
 const user = require('./resources/user');
 
 const app = express();
