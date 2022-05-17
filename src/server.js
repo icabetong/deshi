@@ -8,6 +8,7 @@ const search = require('./search');
 const asset = require('./resources/asset');
 const category = require('./resources/category');
 const user = require('./resources/user');
+const reports = require('./resources/reports');
 
 const app = express();
 const algolia = algoliasearch(

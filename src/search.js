@@ -33,7 +33,7 @@ const fetchAssets = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`assets: ${error}`); }
 }
 const fetchInventories = async (firestore, index) => {
   try {
@@ -48,7 +48,7 @@ const fetchInventories = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`inventories: ${error}`); }
 }
 const fetchIssued = async (firestore, index) => {
   try {
@@ -63,7 +63,7 @@ const fetchIssued = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`issued: ${error}`); }
 }
 const fetchCards = async (firestore, index) => {
   try {
@@ -78,7 +78,7 @@ const fetchCards = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`stockCard: ${error}`); }
 }
 const fetchCategories = async (firestore, index) => {
   try {
@@ -92,7 +92,7 @@ const fetchCategories = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`categories: ${error}`); }
 }
 
 const fetchUsers = async (firestore, index) => {
@@ -107,7 +107,7 @@ const fetchUsers = async (firestore, index) => {
     })
 
     await index.saveObjects(transformed);
-  } catch (error) { console.log(error); }
+  } catch (error) { console.log(`users: ${error}`); }
 }
 
 const listenToAssets = (firestore, index) => {
