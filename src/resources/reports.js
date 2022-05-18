@@ -3,7 +3,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     return response.status(401).send({ reason: "empty-auth-token" });
   else if (!request.body.id)
     return response.status(412).send({ reason: 'empty-no-objectid' })
-  else if (!request.body.items)
+  else if (!request.body.inventoryItems)
     return response.status(412).send({ reason: "empty-items" })
 
   try {
@@ -11,7 +11,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     console.log(decodedToken);
 
     await index.partialUpdateObject({
-      items: request.body.items,
+      inventoryItems: request.body.items,
       objectID: request.body.id,
     });
     return response.sendStatus(200);
@@ -32,7 +32,7 @@ module.exports.updateIssuedItems = async (admin, index, request, response) => {
     return response.status(401).send({ reason: "empty-auth-token" });
   else if (!request.body.id)
     return response.status(412).send({ reason: 'empty-no-objectid' });
-  else if (!request.body.items)
+  else if (!request.body.issuedItems)
     return response.status(412).send({ reason: "empty-items" });
 
   try {
@@ -40,7 +40,7 @@ module.exports.updateIssuedItems = async (admin, index, request, response) => {
     console.log(decodedToken);
 
     await index.partialUpdateObject({
-      items: request.body.items,
+      issuedItems: request.body.items,
       objectID: request.body.id,
     });
     return response.sendStatus(200);
