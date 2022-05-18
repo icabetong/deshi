@@ -88,7 +88,7 @@ const fetchCategories = async (firestore, index) => {
     categories.docs.forEach((doc) => {
       const data = doc.data();
 
-      transformed.push({ ...data, objectID: data.typeId })
+      transformed.push({ ...data, objectID: data.categoryId })
     })
 
     await index.saveObjects(transformed);
