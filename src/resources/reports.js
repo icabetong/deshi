@@ -11,7 +11,7 @@ module.exports.updateInventoryItems = async (admin, index, request, response) =>
     console.log(decodedToken);
 
     await index.partialUpdateObject({
-      inventoryItems: request.body.items,
+      inventoryItems: request.body.inventoryItems,
       objectID: request.body.id,
     });
     return response.sendStatus(200);
@@ -40,7 +40,7 @@ module.exports.updateIssuedItems = async (admin, index, request, response) => {
     console.log(decodedToken);
 
     await index.partialUpdateObject({
-      issuedItems: request.body.items,
+      issuedItems: request.body.issuedItems,
       objectID: request.body.id,
     });
     return response.sendStatus(200);
