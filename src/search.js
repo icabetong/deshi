@@ -1,24 +1,24 @@
 module.exports.init = async(firestore, algolia) => {
-    const assets = algolia.initIndex("assets");
-    const inventories = algolia.initIndex("inventories");
-    const issued = algolia.initIndex("issued");
-    const cards = algolia.initIndex("cards");
-    const categories = algolia.initIndex("categories");
-    const users = algolia.initIndex("users");
+    // const assets = algolia.initIndex("assets");
+    // const inventories = algolia.initIndex("inventories");
+    // const issued = algolia.initIndex("issued");
+    // const cards = algolia.initIndex("cards");
+    // const categories = algolia.initIndex("categories");
+    // const users = algolia.initIndex("users");
 
-    await fetchAssets(firestore, assets);
-    await fetchInventories(firestore, inventories);
-    await fetchIssued(firestore, issued);
-    await fetchCards(firestore, cards);
-    await fetchCategories(firestore, categories);
-    await fetchUsers(firestore, users);
+    // await fetchAssets(firestore, assets);
+    // await fetchInventories(firestore, inventories);
+    // await fetchIssued(firestore, issued);
+    // await fetchCards(firestore, cards);
+    // await fetchCategories(firestore, categories);
+    // await fetchUsers(firestore, users);
 
-    listenToAssets(firestore, assets);
-    listenToInventories(firestore, inventories);
-    listenToIssued(firestore, issued);
-    listenToCards(firestore, cards);
-    listenToCategories(firestore, categories);
-    listenToUsers(firestore, users);
+    // listenToAssets(firestore, assets);
+    // listenToInventories(firestore, inventories);
+    // listenToIssued(firestore, issued);
+    // listenToCards(firestore, cards);
+    // listenToCategories(firestore, categories);
+    // listenToUsers(firestore, users);
 }
 
 const fetchAssets = async (firestore, index) => {
@@ -96,18 +96,18 @@ const fetchCategories = async (firestore, index) => {
 }
 
 const fetchUsers = async (firestore, index) => {
-  try {
-    const users = await firestore.collection("users").get();
+  // try {
+  //   const users = await firestore.collection("users").get();
 
-    const transformed = [];
-    users.docs.forEach((doc) => {
-      const data = doc.data();
+  //   const transformed = [];
+  //   users.docs.forEach((doc) => {
+  //     const data = doc.data();
 
-      transformed.push({ ...data, objectID: data.userId })
-    })
+  //     transformed.push({ ...data, objectID: data.userId })
+  //   })
 
-    await index.saveObjects(transformed);
-  } catch (error) { console.log(`users: ${error}`); }
+  //   await index.saveObjects(transformed);
+  // } catch (error) { console.log(`users: ${error}`); }
 }
 
 const listenToAssets = (firestore, index) => {
