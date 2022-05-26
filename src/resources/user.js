@@ -20,7 +20,7 @@ module.exports.create = async (admin, request, response) => {
      * by authenticating the token from the request body.
      */
     let decodedToken = await admin.auth().verifyIdToken(request.body.token)
-    console.log(decodedToken);
+    console.log(`Token ${decodedToken}`);
 
     const userDoc = await admin.firestore().collection("users")
       .doc(decodedToken.uid).get();
@@ -40,6 +40,7 @@ module.exports.create = async (admin, request, response) => {
       }
 
       const password = utils.randomPassword();
+      console.log(`newUser: ${newUser}`);
       await admin.auth().createUser({
         uid: newUser.userId,
         email: newUser.email,
@@ -64,6 +65,7 @@ module.exports.create = async (admin, request, response) => {
       }
 
       let result = await transporter.sendMail(mail);
+      console.log(`mail: ${result}`);
       console.log("Email sent: " + mail.to);
       return response.sendStatus(200);
 
